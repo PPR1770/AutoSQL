@@ -1,13 +1,14 @@
-# Define SQL Server connection details
+# scripts/run-scripts.ps1
+
 $server = "PK-CET-088"
 $database = "BlazorDB"
 $username = "sa"
 $password = "Pakistan@123"
 
-# Get all SQL files in the 'sql' directory
-$scriptFiles = Get-ChildItem -Path "sql" -Filter "*.sql" | Sort-Object Name
+# Resolve relative path to sql folder
+$sqlPath = Join-Path $PSScriptRoot "..\sql"
+$scriptFiles = Get-ChildItem -Path $sqlPath -Filter "*.sql" | Sort-Object Name
 
-# Execute each script
 foreach ($script in $scriptFiles) {
     Write-Host "Executing $($script.Name)..."
     sqlcmd -S $server -d $database -U $username -P $password -i $script.FullName
