@@ -1,18 +1,19 @@
-  name: Deploy SQL Scripts
+name: Deploy SQL Scripts
 
-  on:
-    push:
-      branches:
-        - main
+on:
+  push:
+    branches:
+      - main
 
-  jobs:
-    deploy:
-      runs-on: windows-latest
+jobs:
+  deploy:
+    runs-on: windows-latest
 
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-        - name: Execute SQL Scripts
-          run: |
-            sqlcmd -S PK-CET-088 -d BlazorDB -E -i sql/create_procedure.sql
+      - name: Run SQL Scripts
+        run: |
+          # Run the PowerShell script to execute all SQL files
+          pwsh ./run-scripts.ps1
