@@ -1,4 +1,4 @@
-name: Deploy SQL Scripts
+name: 🚀 Deploy SQL Scripts
 
 on:
   push:
@@ -6,15 +6,19 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-sql:
+    name: Run SQL Scripts on Local DB
     runs-on: self-hosted
 
     steps:
-      - name: Checkout Repository
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Run SQL Scripts via PowerShell
+      - name: ⚙️ Set Execution Policy & Run Scripts
         shell: pwsh
         run: |
+          Write-Host "🔐 Setting execution policy..."
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+          Write-Host "🚀 Running PowerShell script to deploy SQL..."
           ./scripts/run-scripts.ps1
