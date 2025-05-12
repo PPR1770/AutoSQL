@@ -1,11 +1,9 @@
-# scripts/run-scripts.ps1
-
 $server = "PK-CET-088"
 $database = "BlazorDB"
 $username = "sa"
 $password = "Pakistan@123"
 
-# Resolve relative path to sql folder
+# Path to sql folder (resolve based on script location)
 $sqlPath = Join-Path $PSScriptRoot "..\sql"
 $scriptFiles = Get-ChildItem -Path $sqlPath -Filter "*.sql" | Sort-Object Name
 

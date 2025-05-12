@@ -7,13 +7,14 @@ on:
 
 jobs:
   deploy:
-    runs-on: windows-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Run SQL Scripts
+      - name: Run SQL Scripts via PowerShell
         shell: pwsh
         run: |
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
           ./scripts/run-scripts.ps1
