@@ -20,5 +20,5 @@ jobs:
           Write-Host "Setting execution policy..."
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 
-          Write-Host "Running PowerShell script to deploy SQL scripts..."
+          Write-Host "Running PowerShell script to deploy SQL..."
           ./scripts/run-scripts.ps1
