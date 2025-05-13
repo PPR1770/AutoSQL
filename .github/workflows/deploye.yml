@@ -1,3 +1,29 @@
+# name: Deploy SQL Scripts
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy-sql:
+#     name: Run SQL Scripts on Local SQL Server
+#     runs-on: self-hosted
+
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
+
+#       - name: Set Execution Policy and Run PowerShell Script
+#         shell: powershell
+#         run: |
+#           Write-Host "Setting execution policy..."
+#           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+#           Write-Host "Running PowerShell script to deploy SQL..."
+#           ./scripts/run-scripts.ps1
+
+
 name: Deploy SQL Scripts
 
 on:
@@ -6,19 +32,49 @@ on:
       - main
 
 jobs:
-  deploy-sql:
-    name: Run SQL Scripts on Local SQL Server
+  build:
+    name: Build
     runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
+      - name: Verify .sql Files Exist
+        shell: pwsh
+        run: |
+          $sqlFiles = Get-ChildItem -Path ./sql -Filter *.sql
+          if ($sqlFiles.Count -eq 0) {
+            Write-Error "No .sql files found in /sql"
+            exit 1
+          }
+
+  test:
+    name: Test SQL Connection
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Test SQL Server Connection
+        shell: pwsh
+        run: |
+          $connectionTest = sqlcmd -S "PK-CET-088" -U "sa" -P "Pakistan@123" -Q "SELECT 1"
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Unable to connect to SQL Server"
+            exit 1
+          }
+          else {
+            Write-Host "SQL Server connection successful"
+          }
+
+  deploy:
+    name: Deploy SQL Scripts
+    needs: test
+    runs-on: self-hosted
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Set Execution Policy and Run PowerShell Script
-        shell: powershell
+        shell: pwsh
         run: |
-          Write-Host "Setting execution policy..."
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-
-          Write-Host "Running PowerShell script to deploy SQL..."
           ./scripts/run-scripts.ps1
