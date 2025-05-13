@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Verify .sql Files Exist
-        shell: pwsh
+        shell: powershell
         run: |
           $sqlFiles = Get-ChildItem -Path ./sql -Filter *.sql
           if ($sqlFiles.Count -eq 0) {
@@ -54,7 +54,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Test SQL Server Connection
-        shell: pwsh
+        shell: powershell
         run: |
           $connectionTest = sqlcmd -S "PK-CET-088" -U "sa" -P "Pakistan@123" -Q "SELECT 1"
           if ($LASTEXITCODE -ne 0) {
@@ -74,7 +74,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set Execution Policy and Run PowerShell Script
-        shell: pwsh
+        shell: powershell
         run: |
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
           ./scripts/run-scripts.ps1
